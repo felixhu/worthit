@@ -1,0 +1,31 @@
+<h3>Listings</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Address</th>
+      <th>Bedrooms</th>
+      <th>Minutes</th>
+      <th>Price</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @listings.each do |listing| %>
+    <tr>
+      <td><%= listing.address %></td>
+      <td><%= listing.bedrooms %></td>
+      <td><%= listing.minutes %></td>
+      <td><%= listing.price %></td>
+</td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br />
+
+<%= link_to 'New Listing', new_listing_path %>

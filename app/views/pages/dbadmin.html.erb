@@ -1,0 +1,14 @@
+<%=@message%>
+<%params = {:p => "you-got-it-bro"}%>
+<h4>Import Data:</h2>
+<%= form_for :import_csv, :url => {:action => :loaddb}, :html => {:multipart => true} do |f| %>
+  <%= f.file_field :csv %>
+  <%= f.submit 'Upload CSV'%>
+<%end%>
+
+<%= link_to "View DB", 
+  listings_path(:p => "success"), 
+  :remote=> false, :method=> :get %>
+</br></br></br>
+
+<%= link_to "Delete DB", { :action => "resetdb"}, :confirm => 'Are you sure?'%>

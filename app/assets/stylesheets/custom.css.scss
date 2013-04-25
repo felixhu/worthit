@@ -1,0 +1,28 @@
+@import "bootstrap";
+
+body {
+	text-align:center;
+	background-color: #ecf9f9;
+}
+
+.logo-bar {
+	width: 300px;
+}
+
+.container {
+	width: 300px;
+	background-color: #ffffff;
+}
+
+.navbar .brand {
+	float: none;
+	padding-right:0px;
+}
+
+.label {
+	padding: 10px 30px;
+}
+
+.alert {
+	margin: 10px 15px 0px 15px;
+}

@@ -1,0 +1,7 @@
+<%= form_tag("/pages/dbadmin", :method => "get") do %>
+  <%= label_tag(:t, "Password:") %>
+  <%= text_field_tag(:password) %>
+  <%= submit_tag("Go!") %>
+<% end %>
+</br>
+<%= @error%>

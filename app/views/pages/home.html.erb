@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  </head>
+<style type="text/css">
+body { background-color: #ecf9f9;
+       background-image: url("/assets/back.png");
+       font-family: Futura, Segoe UI, Helvetica;
+       color: #888888;}
+p {
+    font-family: Futura, Segoe UI, Helvetica;
+    color: #888888;
+    text-align: left;
+    padding-left: 40px;
+}
+h1 {background-image: url("/assets/back.png");
+padding-right: 100px;}
+</style>
+  <body>
+    <h1>
+       <img src="/assets/logo.png"/>
+    </h1>
+    <div class="container">
+      <br/>
+      <%= form_tag("/pages/result", :method => "get") do %>
+		<% if @error%>
+		  <div class="alert alert-error">
+		    <%= @error %>.
+		  </div> 
+		<% end %>
+		</br>
+        <p>ADDRESS OR MINUTES</p>
+        <%= text_field_tag(:address, nil, :required => true) %>
+        </br></br>
+        <p>BEDROOMS</p>
+        <%= select_tag :bedrooms, "<option>Studio</option><option>1</option><option>2</option><option>3</option><option>4</option>".html_safe, :multiple => false%>
+        </br></br>
+        <p>PRICE</p>
+        <%= number_field_tag(:price, nil, :min => 0)%>
+        </br>
+        </br>
+        <%= image_submit_tag("button.png") %>
+    </div>
+    <% end %>
+  </body>
+</html>
