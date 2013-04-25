@@ -60,7 +60,7 @@ class Listing < ActiveRecord::Base
   
   def self.new_data(a, p, b)
     address = a.split(' ')
-    if address.include?("minutes") or address.include?("mins") or address.count == 1
+    if address.include?("minutes") or address.include?("mins") or address.include?("min") or address.count == 1
       minutes = Integer(address.at(0))
       address = nil
     else
@@ -94,7 +94,7 @@ class Listing < ActiveRecord::Base
       price = Integer(p)
     end
   
-    if price != 0 and address
+    if price != 0 and address != nil
       if price > 500 and price < 5000
         if minutes < 30
           self.create(:address => a, :bedrooms => bedrooms, :minutes => minutes, :price => price)
