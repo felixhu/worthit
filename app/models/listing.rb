@@ -1,6 +1,15 @@
 class Listing < ActiveRecord::Base
-
-  def self.import_data(a, p, b)
+  
+  def self.import_data(csv)
+    CSV.parse(csv) do |row|
+      address = row[0].split(' ')[1...2]
+      # estimatedPrice = self.regression_model(row[1], row[2])
+      temp = Listing.new(:address => row[0], :price => row[3], :bedrooms => row[1], :minutes => row[2])
+      temp.save
+    end
+  end
+  
+  def self.new_data(a, p, b)
     address = a.split(' ')
     if address.include?("minutes") or address.include?("mins") or address.count == 1
       minutes = Integer(address.at(0))
@@ -44,7 +53,7 @@ class Listing < ActiveRecord::Base
       end
     end
   
-    suggestedRange = 442 + 515 * bedrooms + Float(4374 * 1/minutes)
+    suggestedRange = self.regression_model(bedrooms, Float(4374 * 1/minutes))
     if (price != 0)
       if (price > suggestedRange * 1.1)
         worthit = 1
@@ -66,6 +75,10 @@ class Listing < ActiveRecord::Base
   
     return @result = {:range => suggestedRange, :explainText1 => explainText1, 
       :explainText2 => explainText2, :worthit => worthit, :minutes => minutes}
+  end
+  
+  def self.regression_model(b, m)
+    range = 442 + 515 * b + m
   end
   
 end
