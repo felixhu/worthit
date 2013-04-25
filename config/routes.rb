@@ -13,6 +13,7 @@ Worthit::Application.routes.draw do
   get "/pages/resetdb" => "pages#resetdb"
   get "/pages/viewdb" => "pages#viewdb"
   get "/pages/help" => "pages#help"
+  get "/pages/update" => "pages#update"
 
   root to: 'pages#home'
   # The priority is based upon order of creation: first created -> highest priority.

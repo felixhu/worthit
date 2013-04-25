@@ -1,5 +1,7 @@
 require 'net/http'
 require 'csv'
+require 'statsample'
+
 class PagesController < ApplicationController
   def home
 
@@ -8,6 +10,12 @@ class PagesController < ApplicationController
   def sort
     @recommendations = Listing.order(:price)
   end
+  
+  def update    
+    @message = Listing.calculate_regression
+    render 'dbadmin'
+  end
+    
   
   def dbadmin
     if params[:password] == "password"
@@ -38,15 +46,14 @@ class PagesController < ApplicationController
   
   def result
     if params[:sort] != "minutes"
-    address = params[:address]
-    price = params[:price]
-    bedrooms = params[:bedrooms]    
-    @results = Listing.new_data(address, price, bedrooms)
+      address = params[:address]
+      price = params[:price]
+      bedrooms = params[:bedrooms]    
+      @results = Listing.new_data(address, price, bedrooms)
     
-    @recommendations = Listing.order(:price)
-    @recommendations = Listing.where(:minutes => 0...@results[:minutes]+5).select('address, bedrooms, minutes, price')
-    @recommendations = @recommendations.take(20)
-  end
-
+      @recommendations = Listing.order(:price)
+      @recommendations = Listing.where(:minutes => 0...@results[:minutes]+5).select('address, bedrooms, minutes, price')
+      @recommendations = @recommendations.take(20)
+    end
   end
 end

@@ -9,6 +9,7 @@
 <%= link_to "View DB", 
   listings_path(:p => "success"), 
   :remote=> false, :method=> :get %>
+<%= link_to "Update Regression", :action => "update"%>
 </br></br></br>
 
 <%= link_to "Delete DB", { :action => "resetdb"}, :confirm => 'Are you sure?'%>

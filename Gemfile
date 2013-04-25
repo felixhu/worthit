@@ -29,3 +29,5 @@ group :production do
 end
 
 gem 'roo'
+
+gem 'statsample'
