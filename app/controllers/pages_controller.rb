@@ -7,6 +7,12 @@ class PagesController < ApplicationController
 
   end
   
+  def reset
+    Listing.reset_regression
+    @message = "regression reset!"
+    render 'dbadmin'
+  end
+  
   def sort
     @recommendations = Listing.order(:price)
   end

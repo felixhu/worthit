@@ -4,6 +4,11 @@ require 'net/http'
 
 class Listing < ActiveRecord::Base
   
+  def self.reset_regression
+    Regression.create(:constant => 442, 
+      :bedroom_coefficient => 515, :minutes_coefficient => 4371)
+  end
+  
   def self.calculate_regression
     l = Listing.find(:all)
     b = Array.new(l.count).to_scale
@@ -13,20 +18,32 @@ class Listing < ActiveRecord::Base
       m[index] = listing.minutes
     end
     ds = {'bedrooms' => b, 'minutes' => m}.to_dataset
-    ds['price'] = ds.collect{|row| 442 + 515 * row['bedrooms'] + 4371 * 1 / row['minutes']}
+    
+    regression = Regression.order("created_at").last
+    ds['price'] = ds.collect{|row| regression.constant + regression.bedroom_coefficient * 
+      row['bedrooms'] + regression.minutes_coefficient  * 1 / row['minutes']}
     lr=Statsample::Regression.multiple(ds,'price')
-    puts lr.summary
     result = String(lr.summary)
     
     constant = result.split('| Constant | ')[1]
-    constant = Sconstant.split(' | ')[0]
+    constant = constant.split(' | ')[0]
     bedroomCoef = result.split('| bedrooms | ')[1]
     bedroomCoef = bedroomCoef.split(' | ')[0]
     minCoef = result.split('minutes ')[-1]
     minCoef = minCoef.split(' | ')[1]
+    
+    Regression.create(:constant => constant, 
+      :bedroom_coefficient => bedroomCoef, :minutes_coefficient => minCoef)
+    
+    return @result = "price = " + constant + " + " + bedroomCoef + " x (number of bedrooms) + " + 
+    minCoef + " x (1 / minutes from Northwestern)"
   end
   
   def self.import_data(csv)
+    if Regression.find(:all).empty?
+      self.reset_regression
+    end
+    
     CSV.parse(csv) do |row|
       address_arr = row[0].split(' ')[0...2]
       address = String(address_arr.at(0)) + " " + String(address_arr.at(1))
@@ -110,7 +127,9 @@ class Listing < ActiveRecord::Base
   end
   
   def self.regression_model(b, m)
-    range = 442 + 515 * b + Float(4374 * 1/m)
+    regression = Regression.order("created_at").last
+    range = regression.constant + regression.bedroom_coefficient * b + 
+      regression.minutes_coefficient * Float(1/m)
   end
   
 end

@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Constant:</strong>
+  <%= @regression.constant %>
+</p>
+
+<p>
+  <strong>Bedroom coefficient:</strong>
+  <%= @regression.bedroom_coefficient %>
+</p>
+
+<p>
+  <strong>Minutes coefficient:</strong>
+  <%= @regression.minutes_coefficient %>
+</p>
+
+
+<%= link_to 'Edit', edit_regression_path(@regression) %> |
+<%= link_to 'Back', regressions_path %>

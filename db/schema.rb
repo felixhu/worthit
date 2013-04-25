@@ -11,13 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130412154437) do
+ActiveRecord::Schema.define(version: 20130425062905) do
 
   create_table "listings", force: true do |t|
     t.string   "address"
     t.float    "bedrooms"
     t.integer  "minutes"
     t.integer  "price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "regressions", force: true do |t|
+    t.float    "constant"
+    t.float    "bedroom_coefficient"
+    t.float    "minutes_coefficient"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
