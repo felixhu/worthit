@@ -12,7 +12,8 @@ Worthit::Application.routes.draw do
   post "/pages/loaddb" => "pages#loaddb"
   get "/pages/resetdb" => "pages#resetdb"
   get "/pages/viewdb" => "pages#viewdb"
-  
+  get "/pages/help" => "pages#help"
+
   root to: 'pages#home'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
