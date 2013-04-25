@@ -1,6 +1,64 @@
-class Listing < ActiveRecord::Base
+require 'statsample'
+require 'csv'
+require 'net/http'
 
-  def self.import_data(a, p, b)
+class Listing < ActiveRecord::Base
+  
+  def self.reset_regression
+    Regression.create(:constant => 442, 
+      :bedroom_coefficient => 515, :minutes_coefficient => 4371)
+  end
+  
+  def self.calculate_regression
+    l = Listing.find(:all)
+    b = Array.new(l.count).to_scale
+    m = Array.new(l.count).to_scale
+    l.each_with_index do |listing, index|
+      b[index] = listing.bedrooms
+      m[index] = listing.minutes
+    end
+    ds = {'bedrooms' => b, 'minutes' => m}.to_dataset
+    
+    regression = Regression.order("created_at").last
+    ds['price'] = ds.collect{|row| regression.constant + regression.bedroom_coefficient * 
+      row['bedrooms'] + regression.minutes_coefficient  * 1 / row['minutes']}
+    lr=Statsample::Regression.multiple(ds,'price')
+    result = String(lr.summary)
+    
+    constant = result.split('| Constant | ')[1]
+    constant = constant.split(' | ')[0]
+    bedroomCoef = result.split('| bedrooms | ')[1]
+    bedroomCoef = bedroomCoef.split(' | ')[0]
+    minCoef = result.split('minutes ')[-1]
+    minCoef = minCoef.split(' | ')[1]
+    
+    Regression.create(:constant => constant, 
+      :bedroom_coefficient => bedroomCoef, :minutes_coefficient => minCoef)
+    
+    return @result = "price = " + constant + " + " + bedroomCoef + " x (number of bedrooms) + " + 
+    minCoef + " x (1 / minutes from Northwestern)"
+  end
+  
+  def self.import_data(csv)
+    if Regression.find(:all).empty?
+      self.reset_regression
+    end
+    
+    CSV.parse(csv) do |row|
+      address_arr = row[0].split(' ')[0...2]
+      address = String(address_arr.at(0)) + " " + String(address_arr.at(1))
+      bedrooms = Float(row[1])
+      minutes = Integer(row[2])
+      estimatedPrice = self.regression_model(bedrooms, minutes)
+      price = Integer(row[3])
+      
+      if minutes > 0 and minutes < 30 and price > 0.6 * estimatedPrice and price < 1.4 * estimatedPrice
+        Listing.create(:address => address, :price => price, :bedrooms => bedrooms, :minutes => minutes)
+      end
+    end
+  end
+  
+  def self.new_data(a, p, b)
     address = a.split(' ')
     if address.include?("minutes") or address.include?("mins") or address.count == 1
       minutes = Integer(address.at(0))
@@ -44,7 +102,7 @@ class Listing < ActiveRecord::Base
       end
     end
   
-    suggestedRange = 442 + 515 * bedrooms + Float(4374 * 1/minutes)
+    suggestedRange = self.regression_model(bedrooms, minutes)
     if (price != 0)
       if (price > suggestedRange * 1.1)
         worthit = 1
@@ -66,6 +124,12 @@ class Listing < ActiveRecord::Base
   
     return @result = {:range => suggestedRange, :explainText1 => explainText1, 
       :explainText2 => explainText2, :worthit => worthit, :minutes => minutes}
+  end
+  
+  def self.regression_model(b, m)
+    regression = Regression.order("created_at").last
+    range = regression.constant + regression.bedroom_coefficient * b + 
+      regression.minutes_coefficient * Float(1/m)
   end
   
 end

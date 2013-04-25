@@ -1,0 +1,31 @@
+<h1>Listing regressions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Constant</th>
+      <th>Bedroom coefficient</th>
+      <th>Minutes coefficient</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @regressions.each do |regression| %>
+    <tr>
+      <td><%= regression.constant %></td>
+      <td><%= regression.bedroom_coefficient %></td>
+      <td><%= regression.minutes_coefficient %></td>
+      <td><%= link_to 'Show', regression %></td>
+      <td><%= link_to 'Edit', edit_regression_path(regression) %></td>
+      <td><%= link_to 'Destroy', regression, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br />
+
+<%= link_to 'New Regression', new_regression_path %>

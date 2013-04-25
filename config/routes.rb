@@ -1,4 +1,6 @@
 Worthit::Application.routes.draw do
+  resources :regressions
+
   resources :listings
 
   get "pages/home"
@@ -13,6 +15,8 @@ Worthit::Application.routes.draw do
   get "/pages/resetdb" => "pages#resetdb"
   get "/pages/viewdb" => "pages#viewdb"
   get "/pages/help" => "pages#help"
+  get "/pages/update" => "pages#update"
+  get "/pages/reset" => "pages#reset"
 
   root to: 'pages#home'
   # The priority is based upon order of creation: first created -> highest priority.

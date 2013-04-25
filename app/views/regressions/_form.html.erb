@@ -1,0 +1,29 @@
+<%= form_for(@regression) do |f| %>
+  <% if @regression.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@regression.errors.count, "error") %> prohibited this regression from being saved:</h2>
+
+      <ul>
+      <% @regression.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :constant %><br />
+    <%= f.text_field :constant %>
+  </div>
+  <div class="field">
+    <%= f.label :bedroom_coefficient %><br />
+    <%= f.text_field :bedroom_coefficient %>
+  </div>
+  <div class="field">
+    <%= f.label :minutes_coefficient %><br />
+    <%= f.text_field :minutes_coefficient %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
