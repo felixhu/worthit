@@ -1,4 +1,4 @@
-<%params = {:p => "you-got-it-bro"}%>
+<%params = {:p => "success"}%>
 <h4>Import Data:</h2>
 <%= form_for :import_csv, :url => {:action => :loaddb}, :html => {:multipart => true} do |f| %>
   <%= f.file_field :csv %>
