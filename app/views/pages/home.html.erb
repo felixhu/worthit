@@ -16,11 +16,18 @@ p {
     padding-left: 40px;
 }
 h1 {background-image: url("/assets/back.png");
-padding-right: 100px;}
+padding-right: px;}
+help {background-image: url("/assets/back.png");
+padding-left:60px; top:7px;}
 </style>
   <body>
     <h1>
+    <%= form_tag("/pages/help", :method => "get") do %>
        <img src="/assets/logo.png"/>
+     <help title = "Help">
+       <%= image_submit_tag("help.png") %>
+     </help>
+      <% end %>
     </h1>
     <div class="container">
       <br/>
