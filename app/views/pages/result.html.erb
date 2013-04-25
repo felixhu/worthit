@@ -3,28 +3,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+      function initialize() {
+          var mapOptions = {
+            zoom: 14,
+            center: new google.maps.LatLng(42.06, -87.68), 
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          var map = new google.maps.Map(document.getElementById("recMap"),mapOptions);
+      }
+      function toggleView() {
+      	$('#recTable').toggle();
+      	$('#recMap').toggle();
+      	$('#MapBtn').toggle();
+      	$('#TableBtn').toggle();
+      }
+    </script>
+	<style type="text/css">
+		body { background-color: #ecf9f9;
+		       background-image: url("/assets/back.png");
+		       font-family: Futura, Segoe UI, Helvetica;
+		       color: #888888;
+		   	   height:100%;
+		   	}
+		p {
+		    font-family: Futura, Segoe UI, Helvetica;
+		    color: #888888;
+		    text-align: left;
+		    padding-left: 40px;
+		}
+		a:hover
+		{ 
+		background-color:transparent;
+		}
+		h1 {background-image: url("/assets/back.png");
+		padding-right: 100px;}
+		tr.even {background-color: #efefef;}
+		.addr{text-align: left;}
+		#recMap {
+	        margin-left: 10px;
+	        height: 360px;
+	        width:280px;
+		}
+		#recTable {
+			height:360px;
+			overflow:scroll;
+			display:none;
+		}
+		button {
+			width:60px;
+		}
+		#MapBtn{
+			display:none;
+		}
+		html {
+			height:100%;
+		}
+	</style>
   </head>
-<style type="text/css">
-body { background-color: #ecf9f9;
-       background-image: url("/assets/back.png");
-       font-family: Futura, Segoe UI, Helvetica;
-       color: #888888;}
-p {
-    font-family: Futura, Segoe UI, Helvetica;
-    color: #888888;
-    text-align: left;
-    padding-left: 40px;
-}
-a:hover
-{ 
-background-color:transparent;
-}
-h1 {background-image: url("/assets/back.png");
-padding-right: 100px;}
-tr.even {background-color: #efefef;}
-.addr{text-align: left;}
-</style>
-  <body>
+  <body onload="initialize()">
     <h1>
 	<a href = "home.html"><img src="/assets/logo.png" /></a>
     </h1>
@@ -56,13 +95,21 @@ tr.even {background-color: #efefef;}
         <br/>
 
 		<h5>Similar apartments</h5>
-		<table class = "table table-striped sortable" data-provides="rowlink">
-			<tr>
-					<td><b>Address</b></td>
-					<td><b>Distance</b></td>
-					<td><b>BRs</b></td>
-					<td><b>Price</b></td></tr>
-			<% @recommendations.each do |listing| %>
+
+		<button class="btn" id="MapBtn" onClick="toggleView()">Map</button>
+		<button class="btn" id="TableBtn" onClick="toggleView()">Table</button>
+		<br/>
+		<br/>
+		<div id="recMap"></div>
+
+		<div id="recTable">
+			<table class = "table table-striped sortable" data-provides="rowlink">
+				<tr>
+						<td><b>Address</b></td>
+						<td><b>Distance</b></td>
+						<td><b>BRs</b></td>
+						<td><b>Price</b></td></tr>
+				<% @recommendations.each do |listing| %>
 		        <td><a href = "http://maps.google.com/?q=https://maps.google.com/maps?saddr=Northwestern+University,+Sheridan+Road,+Evanston,+IL&daddr=<%=listing.address%>&hl=en&ll=42.044958,-87.682142&spn=0.019568,0.035105&sll=42.047381,-87.671928&sspn=0.039135,0.07021&geocode=FXqogQIdfhbG-iHekF_UWKCRiilvBmdOn9oPiDHekF_UWKCRig%3BFcOUgQIdSv_F-ilLgLqOD9APiDFEXwhtujlA1Q&oq=Northwestern+University%3B+Sheridan+Road,+Evanston,+IL&dirflg=w&mra=ls&t=m&z=15"><%@a = listing.address.split(' ')
 				   @address = @a.at(0) +" "+ @a.at(1)%>
 				<%=@address%></a></td>
@@ -77,6 +124,7 @@ tr.even {background-color: #efefef;}
 		      </tr>
 		      <% end %>
 		</table>
+		</div>
         </br>
         <a href = "home.html"><img src="/assets/backbutton.png" /></a>
       </br></br>
