@@ -59,7 +59,7 @@ tr.even {background-color: #efefef;}
 					<td><b>BRs</b></td>
 					<td><b>Price</b></td></tr>
 			<% @recommendations.each do |listing| %>
-		        <td><a href = "http://maps.google.com/?q=<%=listing.address%>"><%@a = listing.address.split(' ')
+		        <td><a href = "http://maps.google.com/?q=https://maps.google.com/maps?saddr=Northwestern+University,+Sheridan+Road,+Evanston,+IL&daddr=<%=listing.address%>&hl=en&ll=42.044958,-87.682142&spn=0.019568,0.035105&sll=42.047381,-87.671928&sspn=0.039135,0.07021&geocode=FXqogQIdfhbG-iHekF_UWKCRiilvBmdOn9oPiDHekF_UWKCRig%3BFcOUgQIdSv_F-ilLgLqOD9APiDFEXwhtujlA1Q&oq=Northwestern+University%3B+Sheridan+Road,+Evanston,+IL&dirflg=w&mra=ls&t=m&z=15"><%@a = listing.address.split(' ')
 				   @address = @a.at(0) +" "+ @a.at(1)%>
 				<%=@address%></a></td>
 		        <td><%= listing.minutes %></td>
