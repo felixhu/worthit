@@ -42,23 +42,23 @@ class Listing < ActiveRecord::Base
   def self.import_data(csv)    
     CSV.parse(csv) do |row|
       address_arr = row[0].split(' ')[0...2]
-      address = String(address_arr.at(0)) + " " + String(address_arr.at(1))
+      address = String(address_arr.at(0)) + " " + String(address_arr.at(1)).capitalize
       bedrooms = Float(row[1])
       minutes = Integer(row[2])
       estimatedPrice = self.regression_model(bedrooms, minutes)
       price = Integer(row[3])
       
-      if minutes > 0 and minutes < 30 and price > 0.6 * estimatedPrice and price < 1.4 * estimatedPrice
+      if minutes > 0 and minutes < 50 and price > 0.3 * estimatedPrice and price < 1.7 * estimatedPrice
         Listing.create(:address => address, :price => price, :bedrooms => bedrooms, :minutes => minutes)
       end
     end
   end
   
   def self.new_data(a, p, b)
-    address = a.split(' ')
-    if address.include?("minutes") or address.include?("mins") or address.include?("min") or address.count == 1
+    hasAddress = true
+    if a.split(' ').include?("minutes") or address.include?("mins") or address.include?("min") or address.count == 1
       minutes = Integer(address.at(0))
-      address = nil
+      hasAddress = false
     else
       if a == "123 Fake Street"
         result = 2100
@@ -69,9 +69,6 @@ class Listing < ActiveRecord::Base
         xml = Net::HTTP.start(uri.host, uri.port) {|http|
           http.request(response).body
         }
-
-        #XML does not parse properly when the address is too close, to fix we'll change
-        #the method to reg exp, to avoid crashes
         duration = xml.split(' mins</text>')[-2]
         if duration != nil
           duration = duration.split('<text>')[-1]
@@ -79,6 +76,9 @@ class Listing < ActiveRecord::Base
         else
           minutes = 5
         end
+        
+        tmp = a.split(' ')[0..1]
+        addressText = tmp[0] + " " + tmp[1].capitalize
       end
     end
 
@@ -95,10 +95,10 @@ class Listing < ActiveRecord::Base
     end
     
     suggestedRange = self.regression_model(bedrooms, minutes)
-    if price != 0 and address != nil
+    if price != 0 and hasAddress
       if price > suggestedRange * 0.5 and price < suggestedRange * 1.5
         if minutes < 40
-          self.create(:address => a, :bedrooms => bedrooms, :minutes => minutes, :price => price)
+          self.create(:address => addressText, :bedrooms => bedrooms, :minutes => minutes, :price => price)
         end
       end
     end
