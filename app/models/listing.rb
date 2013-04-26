@@ -56,14 +56,16 @@ class Listing < ActiveRecord::Base
   
   def self.new_data(a, p, b)
     hasAddress = true
-    if a.split(' ').include?("minutes") or address.include?("mins") or address.include?("min") or address.count == 1
-      minutes = Integer(address.at(0))
+    address_arr = a.split(' ')
+    if address_arr.include?("minutes") or address_arr.include?("mins") or address_arr.include?("min") or address_arr.count == 1
+      minutes = Integer(address_arr.at(0))
       hasAddress = false
     else
       if a == "123 Fake Street"
         result = 2100
       else
-        url = "http://maps.googleapis.com/maps/api/directions/xml?origin=" + address.join('%20') + "&destination=2001%20Sheridan%20Evanston,%20IL&sensor=false&mode=walking"
+        url = "http://maps.googleapis.com/maps/api/directions/xml?origin=" + 
+          address_arr.join('%20') + "&destination=2001%20Sheridan%20Evanston,%20IL&sensor=false&mode=walking"
         uri = URI.parse(url)
         response = Net::HTTP::Get.new(uri)
         xml = Net::HTTP.start(uri.host, uri.port) {|http|
