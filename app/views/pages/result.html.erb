@@ -97,7 +97,7 @@ $i +=1;
 			display:none;
 		}
 		button {
-			width:60px;
+			width:30px;
 		}
 		#MapBtn{
 			display:none;
@@ -139,8 +139,9 @@ $i +=1;
         <br/>
 
 		<h5>Similar apartments</h5>
-		<button class="btn" id="MapBtn" onClick="toggleView()">Map</button>
-		<button class="btn" id="TableBtn" onClick="toggleView()">Table</button>
+		<br>
+		Map View:&nbsp;<img class="button" src="/assets/off.png" id="MapBtn" onClick="toggleView()" width=60px/>
+		<img class="button" src="/assets/on.png" id="TableBtn" onClick="toggleView()" width=60px>
 		<br/>
 		<br/>
 		<div id="recMap"></div>
