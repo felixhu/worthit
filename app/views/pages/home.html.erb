@@ -13,12 +13,19 @@ p {
     font-family: Futura, Segoe UI, Helvetica;
     color: #888888;
     text-align: left;
-    padding-left: 40px;
+    padding-left: 35px;
+    font-size: 14px;
 }
 h1 {background-image: url("/assets/back.png");
 padding-right: px;}
 help {background-image: url("/assets/back.png");
-padding-left:60px; top:7px;}
+padding-left:50px; top:7px;}
+subtext {
+    font-family: Futura, Segoe UI, Helvetica;
+    color: #888888;
+    text-align: left;
+    font-size: 10px;
+}
 </style>
   <body>
     <h1>
@@ -38,13 +45,14 @@ padding-left:60px; top:7px;}
 		  </div> 
 		<% end %>
 		</br>
-        <p>ADDRESS OR MINUTES</p>
+        <p>ADDRESS OR MINUTES*</br>
+        <subtext>Apartment address or minutes walking from campus</subtext></p>
         <%= text_field_tag(:address, nil, :required => true) %>
         </br></br>
-        <p>BEDROOMS</p>
+        <p>BEDROOMS*</p>
         <%= select_tag :bedrooms, "<option>Studio</option><option>1</option><option>2</option><option>3</option><option>4</option>".html_safe, :multiple => false%>
         </br></br>
-        <p>PRICE</p>
+        <p>RENT</p>
         <%= number_field_tag(:price, nil, :min => 0)%>
         </br>
         </br>

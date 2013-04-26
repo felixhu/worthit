@@ -59,7 +59,7 @@ class ListingsController < ApplicationController
   def destroy
     @listing.destroy
     respond_to do |format|
-      format.html { redirect_to listings_url }
+      format.html { redirect_to listings_url(:p => "success") }
       format.json { head :no_content }
     end
   end

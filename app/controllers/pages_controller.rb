@@ -21,7 +21,6 @@ class PagesController < ApplicationController
     @message = Listing.calculate_regression
     render 'dbadmin'
   end
-    
   
   def dbadmin
     if params[:password] == "password"

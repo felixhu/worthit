@@ -13,16 +13,16 @@ class Listing < ActiveRecord::Base
     l = Listing.find(:all)
     b = Array.new(l.count).to_scale
     m = Array.new(l.count).to_scale
+    p = Array.new(l.count).to_scale
     l.each_with_index do |listing, index|
       b[index] = listing.bedrooms
       m[index] = listing.minutes
+      p[index] = listing.price
     end
     ds = {'bedrooms' => b, 'minutes' => m}.to_dataset
-    
-    regression = Regression.order("created_at").last
-    ds['price'] = ds.collect{|row| regression.constant + regression.bedroom_coefficient * 
-      row['bedrooms'] + regression.minutes_coefficient  * 1 / row['minutes']}
-    lr=Statsample::Regression.multiple(ds,'price')
+    ds['price'] = ds.collect{|row| 442 + 515 * 
+      row['bedrooms'] + 4371  * 1 / row['minutes']}
+    lr = Statsample::Regression.multiple(ds,'price')
     result = String(lr.summary)
     
     constant = result.split('| Constant | ')[1]
@@ -39,11 +39,7 @@ class Listing < ActiveRecord::Base
     minCoef + " x (1 / minutes from Northwestern)"
   end
   
-  def self.import_data(csv)
-    if Regression.find(:all).empty?
-      self.reset_regression
-    end
-    
+  def self.import_data(csv)    
     CSV.parse(csv) do |row|
       address_arr = row[0].split(' ')[0...2]
       address = String(address_arr.at(0)) + " " + String(address_arr.at(1))
@@ -73,36 +69,40 @@ class Listing < ActiveRecord::Base
         xml = Net::HTTP.start(uri.host, uri.port) {|http|
           http.request(response).body
         }
-  
+
         #XML does not parse properly when the address is too close, to fix we'll change
         #the method to reg exp, to avoid crashes
         duration = xml.split(' mins</text>')[-2]
-        duration = duration.split('<text>')[-1]
-        minutes = Integer(duration)
+        if duration != nil
+          duration = duration.split('<text>')[-1]
+          minutes = Integer(duration)
+        else
+          minutes = 5
+        end
       end
     end
-  
+
     if (b == "Studio")
       bedrooms = 0.5
     else
       bedrooms = Float(b)
     end
-  
+
     if p == ""
       price = 0
     else
       price = Integer(p)
     end
-  
+    
+    suggestedRange = self.regression_model(bedrooms, minutes)
     if price != 0 and address != nil
-      if price > 500 and price < 5000
-        if minutes < 30
+      if price > suggestedRange * 0.5 and price < suggestedRange * 1.5
+        if minutes < 40
           self.create(:address => a, :bedrooms => bedrooms, :minutes => minutes, :price => price)
         end
       end
     end
-  
-    suggestedRange = self.regression_model(bedrooms, minutes)
+    
     if (price != 0)
       if (price > suggestedRange * 1.1)
         worthit = 1
@@ -121,12 +121,16 @@ class Listing < ActiveRecord::Base
     end
     explainText1 = "Price range for a " + bedroomText + " apartment" 
     explainText2 =  "about " + minutes.to_s + " minutes away:"  
-  
+
     return @result = {:range => suggestedRange, :explainText1 => explainText1, 
       :explainText2 => explainText2, :worthit => worthit, :minutes => minutes}
   end
   
   def self.regression_model(b, m)
+    if Regression.find(:all).empty?
+      self.reset_regression
+    end
+    
     regression = Regression.order("created_at").last
     range = regression.constant + regression.bedroom_coefficient * b + 
       regression.minutes_coefficient * Float(1/m)
