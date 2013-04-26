@@ -6,23 +6,23 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript">
-	var geocoder;
-	var map
-      function initialize() {
-	geocoder = new google.maps.Geocoder();
-          var mapOptions = {
-            zoom: 14,
-            center: new google.maps.LatLng(42.06, -87.68), 
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          };
-          map = new google.maps.Map(document.getElementById("recMap"),mapOptions);
-		codeAddress()
-      }
+		var geocoder;
+		var map
+	      function initialize() {
+		geocoder = new google.maps.Geocoder();
+	          var mapOptions = {
+	            zoom: 14,
+	            center: new google.maps.LatLng(42.06, -87.68), 
+	            mapTypeId: google.maps.MapTypeId.ROADMAP
+	          };
+	          map = new google.maps.Map(document.getElementById("recMap"),mapOptions);
+			codeAddress()
+	      }
 
 
-	function codeAddress() {
-	<% 
-$i=0
+		function codeAddress() {
+		<% 
+	$i=0
 
 @recommendations.each do |listing| 
 
@@ -32,32 +32,28 @@ if $i > 10 then
    end
 $i +=1;
 %>
-    var address = '<%=listing.address%>,Evanston,60201';
-    geocoder.geocode( { 'address': address}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        map.setCenter(results[0].geometry.location);
-        var marker<%=$i%> = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location
-        });
-	 var iw<%=$i%> = new google.maps.InfoWindow({
-      content: '<%=listing.address%><br>Rooms:<% if listing.bedrooms == 0.5%>Studio<%else%><%=listing.bedrooms.to_i%><%end%><br>$<%= listing.price %>'
-     });
-	google.maps.event.addListener(marker<%=$i%>, 'click', function() {
-        iw<%=$i%>.open(map, marker<%=$i%>);
+var address = '<%=listing.address%>,Evanston,60201';
+geocoder.geocode( { 'address': address}, function(results, status) {
+  if (status == google.maps.GeocoderStatus.OK) {
+    map.setCenter(results[0].geometry.location);
+    var marker<%=$i%> = new google.maps.Marker({
+        map: map,
+        position: results[0].geometry.location
     });
-      } else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
-
-	
-
+ var iw<%=$i%> = new google.maps.InfoWindow({
+   content: '<%=listing.address%>'
+ });
+google.maps.event.addListener(marker<%=$i%>, 'click', function() {
+    iw<%=$i%>.open(map, marker<%=$i%>);
+});
+  } else {
+    alert("Geocode was not successful for the following reason: " + status);
+  }
+});
 
 	 <% end %>
   }
       function toggleView() {
-
       	$('#show').toggle();
       	
 		$('#HideBtn').toggle();
@@ -90,12 +86,19 @@ $i +=1;
 	        margin-left: 10px;
 	        height: 360px;
 	        width:280px;
+
 	display:none;
-		}
+}
 		#recTable {
 			height:360px;
 			overflow:scroll;
+<<<<<<< HEAD
 
+=======
+			display:none;
+			overflow-y: scroll;
+		 	overflow-x:hidden;
+>>>>>>> bc4de6f80a97b066731ad08fa3866ce5c3051775
 		}
 		button {
 			width:270px;
