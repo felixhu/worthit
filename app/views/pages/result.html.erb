@@ -57,11 +57,11 @@ $i +=1;
 	 <% end %>
   }
       function toggleView() {
-	
-      	$('#recTable').toggle();
-      	$('#recMap').toggle();
-      	$('#MapBtn').toggle();
-      	$('#TableBtn').toggle();
+
+      	$('#show').toggle();
+      	
+		$('#HideBtn').toggle();
+		$('#ShowBtn').toggle();
       }
     </script>
 	<style type="text/css">
@@ -90,16 +90,26 @@ $i +=1;
 	        margin-left: 10px;
 	        height: 360px;
 	        width:280px;
+	display:none;
 		}
 		#recTable {
 			height:360px;
 			overflow:scroll;
-			display:none;
+
 		}
 		button {
-			width:30px;
+			width:270px;
 		}
 		#MapBtn{
+			display:none;
+		}
+		#HideBtn{
+			display:none;
+		}
+		#ShowBtn{
+			
+		}
+		#show{
 			display:none;
 		}
 		html {
@@ -115,17 +125,17 @@ $i +=1;
       <%if @results[:worthit] != 0
       		if @results[:worthit] == 1 %>
 	    		<div class="alert alert-error">
-	      			<strong>Not worth it!</strong>
+	      			<h3>Not worth it!</h3>
 	      		</div>  		
 	      <%end
 			if @results[:worthit] == 2  %>
 	      		<div class="alert alert-success">
-	      			<strong>Worth it!</strong>
+	      			<h3>Worth it!</h3>
 	      		</div>
 	      <%end
 			if @results[:worthit] == 3 %> 
 			<div class="alert alert-success">
-    			<strong>Great deal!</strong>
+    			<h4>Great deal!</h4>
     		</div>
 	      	<%end
 		end
@@ -137,13 +147,12 @@ $i +=1;
 		<%=@results[:explainText1]%></br><%=@results[:explainText2]%>
         <h2>$<%= yield(:lowerPrice) %> - $<%= yield(:higherPrice) %></h2>
         <br/>
-
-		<h5>Similar apartments</h5>
+		<button class="btn" id="HideBtn" onClick="toggleView()">Hide related apartments</button>
+		<button class="btn" id="ShowBtn" onClick="toggleView()">Show related apartments</button>
+		</br>
 		<br>
-		Map View:&nbsp;<img class="button" src="/assets/off.png" id="MapBtn" onClick="toggleView()" width=60px/>
-		<img class="button" src="/assets/on.png" id="TableBtn" onClick="toggleView()" width=60px>
-		<br/>
-		<br/>
+
+		<div id="show">
 		<div id="recMap"></div>
 
 		<div id="recTable">
@@ -173,5 +182,6 @@ $i +=1;
         <a href = "home.html"><img src="/assets/backbutton.png" /></a>
       </br></br>
     </div>
+</div>
   </body>
 </html>

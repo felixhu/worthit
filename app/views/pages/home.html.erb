@@ -37,7 +37,6 @@ subtext {
       <% end %>
     </h1>
     <div class="container">
-      <br/>
       <%= form_tag("/pages/result", :method => "get") do %>
 		<% if @error%>
 		  <div class="alert alert-error">
@@ -45,14 +44,15 @@ subtext {
 		  </div> 
 		<% end %>
 		</br>
-        <p>ADDRESS OR MINUTES*</br>
+		<h5>Is your apartment worth it?</h5></br>
+        <p>ADDRESS OR MINUTES</br>
         <subtext>Apartment address or minutes walking from campus</subtext></p>
         <%= text_field_tag(:address, nil, :required => true) %>
         </br></br>
-        <p>BEDROOMS*</p>
+        <p>BEDROOMS</p>
         <%= select_tag :bedrooms, "<option>Studio</option><option>1</option><option>2</option><option>3</option><option>4</option>".html_safe, :multiple => false%>
         </br></br>
-        <p>RENT</p>
+        <p>RENT (optional)</p>
         <%= number_field_tag(:price, nil, :min => 0)%>
         </br>
         </br>
