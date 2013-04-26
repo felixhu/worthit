@@ -6,15 +6,58 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript">
+	var geocoder;
+	var map
       function initialize() {
+	geocoder = new google.maps.Geocoder();
           var mapOptions = {
             zoom: 14,
             center: new google.maps.LatLng(42.06, -87.68), 
             mapTypeId: google.maps.MapTypeId.ROADMAP
           };
-          var map = new google.maps.Map(document.getElementById("recMap"),mapOptions);
+          map = new google.maps.Map(document.getElementById("recMap"),mapOptions);
+		codeAddress()
       }
+
+
+	function codeAddress() {
+	<% 
+$i=0
+
+@recommendations.each do |listing| 
+
+
+if $i > 10 then
+      break
+   end
+$i +=1;
+%>
+    var address = '<%=listing.address%>,Evanston,60201';
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+        var marker<%=$i%> = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+        });
+	 var iw<%=$i%> = new google.maps.InfoWindow({
+      content: '<%=listing.address%><br>Rooms:<% if listing.bedrooms == 0.5%>Studio<%else%><%=listing.bedrooms.to_i%><%end%><br>$<%= listing.price %>'
+     });
+	google.maps.event.addListener(marker<%=$i%>, 'click', function() {
+        iw<%=$i%>.open(map, marker<%=$i%>);
+    });
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+
+	
+
+
+	 <% end %>
+  }
       function toggleView() {
+	
       	$('#recTable').toggle();
       	$('#recMap').toggle();
       	$('#MapBtn').toggle();
@@ -22,6 +65,7 @@
       }
     </script>
 	<style type="text/css">
+			#recMap img{max-width:none}
 		body { background-color: #ecf9f9;
 		       background-image: url("/assets/back.png");
 		       font-family: Futura, Segoe UI, Helvetica;
@@ -95,7 +139,6 @@
         <br/>
 
 		<h5>Similar apartments</h5>
-
 		<button class="btn" id="MapBtn" onClick="toggleView()">Map</button>
 		<button class="btn" id="TableBtn" onClick="toggleView()">Table</button>
 		<br/>
@@ -110,7 +153,7 @@
 						<td><b>BRs</b></td>
 						<td><b>Price</b></td></tr>
 				<% @recommendations.each do |listing| %>
-		        <td><a href = "http://maps.google.com/?q=https://maps.google.com/maps?saddr=Northwestern+University,+Sheridan+Road,+Evanston,+IL&daddr=<%=listing.address%>&hl=en&ll=42.044958,-87.682142&spn=0.019568,0.035105&sll=42.047381,-87.671928&sspn=0.039135,0.07021&geocode=FXqogQIdfhbG-iHekF_UWKCRiilvBmdOn9oPiDHekF_UWKCRig%3BFcOUgQIdSv_F-ilLgLqOD9APiDFEXwhtujlA1Q&oq=Northwestern+University%3B+Sheridan+Road,+Evanston,+IL&dirflg=w&mra=ls&t=m&z=15"><%@a = listing.address.split(' ')
+		        <td><a href = "http://maps.google.com/?q=<%=listing.address%>,Evanston,60201"><%@a = listing.address.split(' ')
 				   @address = @a.at(0) +" "+ @a.at(1)%>
 				<%=@address%></a></td>
 		        <td><%= listing.minutes %></td>
