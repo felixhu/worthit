@@ -53,11 +53,18 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 
 	 <% end %>
   }
-      function toggleView() {
+      function toggleShow() {
       	$('#show').toggle();
       	
 		$('#HideBtn').toggle();
 		$('#ShowBtn').toggle();
+      }
+      function toggleView() {
+      	$('#recTable').toggle();
+      	$('#recMap').toggle();
+      	
+		$('#MapBtn').toggle();
+		$('#TableBtn').toggle();
       }
     </script>
 	<style type="text/css">
@@ -87,18 +94,13 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 	        height: 360px;
 	        width:280px;
 
-	display:none;
-}
+			display:none;
+		}
 		#recTable {
 			height:360px;
 			overflow:scroll;
-<<<<<<< HEAD
-
-=======
-			display:none;
 			overflow-y: scroll;
 		 	overflow-x:hidden;
->>>>>>> bc4de6f80a97b066731ad08fa3866ce5c3051775
 		}
 		button {
 			width:270px;
@@ -150,12 +152,16 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		<%=@results[:explainText1]%></br><%=@results[:explainText2]%>
         <h2>$<%= yield(:lowerPrice) %> - $<%= yield(:higherPrice) %></h2>
         <br/>
-		<button class="btn" id="HideBtn" onClick="toggleView()">Hide related apartments</button>
-		<button class="btn" id="ShowBtn" onClick="toggleView()">Show related apartments</button>
+		<img src="/assets/button.png" id="HideBtn" onClick="toggleShow()"></img>
+		<img src="/assets/button.png" id="ShowBtn" onClick="toggleShow()"></img>
 		</br>
-		<br>
-
+		<br/>
 		<div id="show">
+		<button class="btn" id="MapBtn" onClick="toggleView()">Map</button>
+		<button class="btn" id="TableBtn" onClick="toggleView()">Table</button>
+		<br/><br/>
+
+		
 		<div id="recMap"></div>
 
 		<div id="recTable">
