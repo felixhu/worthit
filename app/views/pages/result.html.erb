@@ -59,12 +59,17 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		$('#HideBtn').toggle();
 		$('#ShowBtn').toggle();
       }
-      function toggleView() {
-      	$('#recTable').toggle();
-      	$('#recMap').toggle();
-      	
-		$('#MapBtn').toggle();
-		$('#TableBtn').toggle();
+      function showMap() {
+      	$('#recMap').show();
+      	$('#recTable').hide();
+      	$('#MapTab').addClass("active");
+      	$('#TableTab').removeClass("active");
+      }
+      function showTable() {
+      	$('#recTable').show();
+      	$('#recMap').hide();
+      	$('#TableTab').addClass("active");
+      	$('#MapTab').removeClass("active");
       }
     </script>
 	<style type="text/css">
@@ -105,9 +110,6 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		button {
 			width:270px;
 		}
-		#MapBtn{
-			display:none;
-		}
 		#HideBtn{
 			display:none;
 		}
@@ -119,6 +121,12 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		}
 		html {
 			height:100%;
+		}
+		.viewTab {
+			width:50%;
+		}
+		.viewTabs {
+			margin-bottom: 10px;
 		}
 	</style>
   </head>
@@ -156,14 +164,15 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		<img src="/assets/button.png" id="ShowBtn" onClick="toggleShow()"></img>
 		</br>
 		<br/>
+
 		<div id="show">
-		<button class="btn" id="MapBtn" onClick="toggleView()">Map</button>
-		<button class="btn" id="TableBtn" onClick="toggleView()">Table</button>
-		<br/><br/>
 
-		
+		<ul class="nav nav-tabs viewTabs">
+			<li class="active viewTab" id="TableTab" onClick="showTable()"><a data-toggle="tab">Table</a></li>
+			<li class="viewTab" id="MapTab" onClick="showMap()"><a data-toggle="tab">Map</a></li>
+		</ul>
+
 		<div id="recMap"></div>
-
 		<div id="recTable">
 			<table class = "table table-striped sortable" data-provides="rowlink">
 				<tr>
