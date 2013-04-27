@@ -52,7 +52,7 @@ subtext {
         <p>BEDROOMS</p>
         <%= select_tag :bedrooms, "<option>Studio</option><option>1</option><option>2</option><option>3</option><option>4</option>".html_safe, :multiple => false%>
         </br></br>
-        <p>RENT (optional)</p>
+        <p>TOTAL RENT (optional)</p>
         <%= number_field_tag(:price, nil, :min => 0)%>
         </br>
         </br>

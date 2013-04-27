@@ -19,9 +19,7 @@ class Listing < ActiveRecord::Base
       m[index] = listing.minutes
       p[index] = listing.price
     end
-    ds = {'bedrooms' => b, 'minutes' => m}.to_dataset
-    ds['price'] = ds.collect{|row| 442 + 515 * 
-      row['bedrooms'] + 4371  * 1 / row['minutes']}
+    ds = {'bedrooms' => b, 'minutes' => m, 'price' => p}.to_dataset
     lr = Statsample::Regression.multiple(ds,'price')
     result = String(lr.summary)
     
@@ -35,7 +33,7 @@ class Listing < ActiveRecord::Base
     Regression.create(:constant => constant, 
       :bedroom_coefficient => bedroomCoef, :minutes_coefficient => minCoef)
     
-    return @result = "price = " + constant + " + " + bedroomCoef + " x (number of bedrooms) + " + 
+    @result = "price = " + constant + " + " + bedroomCoef + " x (number of bedrooms) + " + 
     minCoef + " x (1 / minutes from Northwestern)"
   end
   
@@ -64,6 +62,7 @@ class Listing < ActiveRecord::Base
       if a == "123 Fake Street"
         result = 2100
       else
+        address_arr.push("60201") unless address_arr.include?("60201")
         url = "http://maps.googleapis.com/maps/api/directions/xml?origin=" + 
           address_arr.join('%20') + "&destination=2001%20Sheridan%20Evanston,%20IL&sensor=false&mode=walking"
         uri = URI.parse(url)
@@ -78,6 +77,7 @@ class Listing < ActiveRecord::Base
         else
           minutes = 5
         end
+        
         
         tmp = a.split(' ')[0..1]
         addressText = tmp[0] + " " + tmp[1].capitalize
