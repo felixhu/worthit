@@ -43,7 +43,7 @@ geocoder.geocode( { 'address': address}, function(results, status) {
         position: results[0].geometry.location
     });
  var iw<%=$i%> = new google.maps.InfoWindow({
-   content: '<%=listing.address%>'
+   content: '<%=listing.address%></br>Price: $<%=listing.price%></br>Bedrooms: <%if listing.bedrooms == 0.5%>Studio<%else%><%=listing.bedrooms.to_i%><%end%>'
  });
 google.maps.event.addListener(marker<%=$i%>, 'click', function() {
     iw<%=$i%>.open(map, marker<%=$i%>);
