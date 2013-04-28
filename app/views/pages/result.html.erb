@@ -7,7 +7,8 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript">
 		var geocoder;
-		var map
+		var map;
+		var center;
 	      function initialize() {
 		geocoder = new google.maps.Geocoder();
 	          var mapOptions = {
@@ -36,12 +37,13 @@ var address = '<%=listing.address%>,Evanston,60201';
 geocoder.geocode( { 'address': address}, function(results, status) {
   if (status == google.maps.GeocoderStatus.OK) {
     map.setCenter(results[0].geometry.location);
+    center = results[0].geometry.location;
     var marker<%=$i%> = new google.maps.Marker({
         map: map,
         position: results[0].geometry.location
     });
  var iw<%=$i%> = new google.maps.InfoWindow({
-   content: '<%=listing.address%>'
+   content: '<%=listing.address%></br>Price: $<%=listing.price%></br>Bedrooms: <%if listing.bedrooms == 0.5%>Studio<%else%><%=listing.bedrooms.to_i%><%end%>'
  });
 google.maps.event.addListener(marker<%=$i%>, 'click', function() {
     iw<%=$i%>.open(map, marker<%=$i%>);
@@ -53,11 +55,26 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 
 	 <% end %>
   }
-      function toggleView() {
+      function toggleShow() {
       	$('#show').toggle();
       	
 		$('#HideBtn').toggle();
 		$('#ShowBtn').toggle();
+      }
+      function showMap() {
+      	$('#recMap').show();
+      	$('#recTable').hide();
+      	$('#MapTab').addClass("active");
+      	$('#TableTab').removeClass("active");
+      	google.maps.event.trigger(map, 'resize');
+	map.setCenter(center);
+      
+      }
+      function showTable() {
+      	$('#recTable').show();
+      	$('#recMap').hide();
+      	$('#TableTab').addClass("active");
+      	$('#MapTab').removeClass("active");
       }
     </script>
 	<style type="text/css">
@@ -74,6 +91,9 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		    text-align: left;
 		    padding-left: 40px;
 		}
+		a{font-family: Futura, Segoe UI, Helvetica;
+			color: #e87154;
+			font-size: 11px;}
 		a:hover
 		{ 
 		background-color:transparent;
@@ -87,24 +107,16 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 	        height: 360px;
 	        width:280px;
 
-	display:none;
-}
+			display:none;
+		}
 		#recTable {
 			height:360px;
 			overflow:scroll;
-<<<<<<< HEAD
-
-=======
-			display:none;
 			overflow-y: scroll;
 		 	overflow-x:hidden;
->>>>>>> bc4de6f80a97b066731ad08fa3866ce5c3051775
 		}
 		button {
 			width:270px;
-		}
-		#MapBtn{
-			display:none;
 		}
 		#HideBtn{
 			display:none;
@@ -117,6 +129,12 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		}
 		html {
 			height:100%;
+		}
+		.viewTab {
+			width:50%;
+		}
+		.viewTabs {
+			margin-bottom: 10px;
 		}
 	</style>
   </head>
@@ -150,14 +168,19 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		<%=@results[:explainText1]%></br><%=@results[:explainText2]%>
         <h2>$<%= yield(:lowerPrice) %> - $<%= yield(:higherPrice) %></h2>
         <br/>
-		<button class="btn" id="HideBtn" onClick="toggleView()">Hide related apartments</button>
-		<button class="btn" id="ShowBtn" onClick="toggleView()">Show related apartments</button>
+		<img src="/assets/hiderecs.png" id="HideBtn" onClick="toggleShow()"></img>
+		<img src="/assets/showrecs.png" id="ShowBtn" onClick="toggleShow()"></img>
 		</br>
-		<br>
+		<br/>
 
 		<div id="show">
-		<div id="recMap"></div>
 
+		<ul class="nav nav-tabs viewTabs">
+			<li class="active viewTab" id="TableTab" onClick="showTable()"><a data-toggle="tab">TABLE</a></li>
+			<li class="viewTab" id="MapTab" onClick="showMap()"><a data-toggle="tab">MAP</a></li>
+		</ul>
+
+		<div id="recMap"></div>
 		<div id="recTable">
 			<table class = "table table-striped sortable" data-provides="rowlink">
 				<tr>
