@@ -97,6 +97,7 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 		a:hover
 		{ 
 		background-color:transparent;
+		color: black;
 		}
 		h1 {background-image: url("/assets/back.png");
 		padding-right: 100px;}
@@ -156,7 +157,7 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 	      <%end
 			if @results[:worthit] == 3 %> 
 			<div class="alert alert-success">
-    			<h4>Great deal!</h4>
+    			<h3>Great deal!</h3>
     		</div>
 	      	<%end
 		end
@@ -167,7 +168,8 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
         <br/>
 		<%=@results[:explainText1]%></br><%=@results[:explainText2]%>
         <h2>$<%= yield(:lowerPrice) %> - $<%= yield(:higherPrice) %></h2>
-        <br/>
+        <a href='/pages/help'>How was this calculated?</a>
+        </br></br>
 		<img src="/assets/hiderecs.png" id="HideBtn" onClick="toggleShow()"></img>
 		<img src="/assets/showrecs.png" id="ShowBtn" onClick="toggleShow()"></img>
 		</br>

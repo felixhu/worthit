@@ -57,8 +57,8 @@ class PagesController < ApplicationController
       @results = Listing.new_data(address, price, bedrooms)
     
       @recommendations = Listing.order(:price)
-      @recommendations = Listing.where(:minutes => 0...@results[:minutes]+5).select('address, bedrooms, minutes, price')
-      @recommendations = @recommendations.take(20)
+      @recommendations = Listing.where("price < ? OR minutes <= ?", @results[:price], @results[:minutes]).select('address, bedrooms, minutes, price')
+      @recommendations = @recommendations.take(10)
     end
   end
 end
