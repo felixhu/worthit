@@ -56,7 +56,11 @@ class PagesController < ApplicationController
       bedrooms = params[:bedrooms]    
       @results = Listing.new_data(address, price, bedrooms)
       
-      p = @results[:price] + 500
+      if @results[:price] = 0
+        p = 10000
+      else
+        p = @results[:price] + 500
+      end
       m = @results[:minutes] + 10
       bl = @results[:bedrooms] - 1
       bu = @results[:bedrooms] + 1
