@@ -43,11 +43,11 @@ class Listing < ActiveRecord::Base
       address = String(row[0])
       bedrooms = Float(row[1])
       minutes = Integer(row[2])
-      estimatedPrice = self.regression_model(bedrooms, minutes)
+      #estimatedPrice = self.regression_model(bedrooms, minutes)
       price = Integer(row[3])
       
-      if minutes > 0 and minutes < 50 and price > 0.3 * estimatedPrice and price < 1.7 * estimatedPrice
-        Listing.create(:address => address, :price => price, :bedrooms => bedrooms, :minutes => minutes)
+      if minutes > 0 and minutes < 50
+        self.create(:address => address, :price => price, :bedrooms => bedrooms, :minutes => minutes)
       end
     end
   end
