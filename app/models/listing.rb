@@ -16,7 +16,7 @@ class Listing < ActiveRecord::Base
     p = Array.new(l.count).to_scale
     l.each_with_index do |listing, index|
       b[index] = listing.bedrooms
-      m[index] = listing.minutes
+      m[index] = Float(1000/listing.minutes)
       p[index] = listing.price
     end
     ds = {'bedrooms' => b, 'minutes' => m, 'price' => p}.to_dataset
@@ -29,18 +29,18 @@ class Listing < ActiveRecord::Base
     bedroomCoef = bedroomCoef.split(' | ')[0]
     minCoef = result.split('minutes ')[-1]
     minCoef = minCoef.split(' | ')[1]
-    
+
     Regression.create(:constant => constant, 
       :bedroom_coefficient => bedroomCoef, :minutes_coefficient => minCoef)
     
     @result = "price = " + constant + " + " + bedroomCoef + " x (number of bedrooms) + " + 
     minCoef + " x (1 / minutes from Northwestern)"
+    
   end
   
   def self.import_data(csv)    
     CSV.parse(csv) do |row|
-      address_arr = row[0].split(' ')[0...2]
-      address = String(address_arr.at(0)) + " " + String(address_arr.at(1)).capitalize
+      address = String(row[0])
       bedrooms = Float(row[1])
       minutes = Integer(row[2])
       estimatedPrice = self.regression_model(bedrooms, minutes)
@@ -125,7 +125,7 @@ class Listing < ActiveRecord::Base
     explainText2 =  "about " + minutes.to_s + " minutes away:"  
 
     return @result = {:range => suggestedRange, :explainText1 => explainText1, 
-      :explainText2 => explainText2, :worthit => worthit, :minutes => minutes}
+      :explainText2 => explainText2, :worthit => worthit, :minutes => minutes, :bedrooms => bedrooms, :price => price}
   end
   
   def self.regression_model(b, m)
@@ -135,7 +135,7 @@ class Listing < ActiveRecord::Base
     
     regression = Regression.order("created_at").last
     range = regression.constant + regression.bedroom_coefficient * b + 
-      regression.minutes_coefficient * Float(1/m)
+      regression.minutes_coefficient * Float(1000/m)
   end
   
 end

@@ -193,9 +193,8 @@ google.maps.event.addListener(marker<%=$i%>, 'click', function() {
 						<td><b>BRs</b></td>
 						<td><b>Price</b></td></tr>
 				<% @recommendations.each do |listing| %>
-		        <td><a href = "http://maps.google.com/?q=<%=listing.address%>,Evanston,60201"><%@a = listing.address.split(' ')
-				   @address = @a.at(0) +" "+ @a.at(1)%>
-				<%=@address%></a></td>
+		        <td><a href = "http://maps.google.com/?q=<%=listing.address%>,Evanston,60201">
+				<%=listing.address%></a></td>
 		        <td><%= listing.minutes %></td>
 		        <td><% if listing.bedrooms == 0.5%>
 			 				Stu <%

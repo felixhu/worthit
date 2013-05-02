@@ -55,10 +55,16 @@ class PagesController < ApplicationController
       price = params[:price]
       bedrooms = params[:bedrooms]    
       @results = Listing.new_data(address, price, bedrooms)
-    
-      @recommendations = Listing.order(:price)
-      @recommendations = Listing.where("price < ? OR minutes <= ?", @results[:price], @results[:minutes]).select('address, bedrooms, minutes, price')
-      @recommendations = @recommendations.take(10)
+      
+      p = @results[:price] + 500
+      m = @results[:minutes] + 10
+      bl = @results[:bedrooms] - 1
+      bu = @results[:bedrooms] + 1
+      
+      rec = Listing.where("price < ? AND minutes <= ? AND bedrooms >= ? AND bedrooms <= ?", 
+        p, m, bl, bu).select('address, bedrooms, minutes, price')
+      rec = rec.take(10)
+      @recommendations = rec.sort { |x, y| x.minutes <=> y.minutes}
     end
   end
 end
